@@ -262,7 +262,7 @@ cmd({
     )
     //---------------------------------------------------------------------------
 cmd({
-            pattern: "audio",
+            pattern: "song",
             desc: "Downloads audio from youtube.",
             category: "downloader",
             filename: __filename,
@@ -278,7 +278,7 @@ cmd({
                 listSerch.push({
                     title: i.title,
                     rowId: `${prefix}ytmp3 ${i.url}`,
-                    description: `Secktor / ${i.timestamp}`
+                    description: `WA-BOT / ${i.timestamp}`
                 })
             }
             const sections = [
