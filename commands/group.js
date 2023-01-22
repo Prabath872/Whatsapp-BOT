@@ -28,7 +28,7 @@ cmd({
                 citel.reply("Link Invalid, Please Send a valid whatsapp Group Link!");
             let result = text.split(" ")[0].split("https://chat.whatsapp.com/")[1];
             await Void.groupAcceptInvite(result)
-                .then((res) => citel.reply("🟩Joined Group"))
+                .then((res) => citel.reply("Success✅"))
                 .catch((err) => citel.reply("Error in Joining Group"));
 
         }
@@ -76,7 +76,7 @@ cmd({
                 const stikk = await sticker.toBuffer();
                 return Void.sendMessage(citel.chat, {  sticker: stikk   }, {    quoted: citel });
             } else {
-                citel.reply("*Uhh,Please reply to any image or video*");
+                citel.reply("*වීඩියෝවක් හෝ පොටෝ එකක් අවශ්‍යයි!*");
             }
         }
     )
@@ -653,14 +653,14 @@ cmd({
                 let buttons = [{
                         buttonId: `${prefix}group open`,
                         buttonText: {
-                            displayText: "📍Unmute",
+                            displayText: "Unmute🔓",
                         },
                         type: 1,
                     },
                     {
                         buttonId: `${prefix}group close`,
                         buttonText: {
-                            displayText: "📍Mute",
+                            displayText: "Mute🔒",
                         },
                         type: 1,
                     },
