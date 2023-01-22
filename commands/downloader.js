@@ -1,3 +1,22 @@
+Skip to content
+Prabath872
+/
+CHAMI-MDv1
+Public
+forked from chamiofficial/CHAMI-MDv1
+Code
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+CHAMI-MDv1/commands/downloader.js
+@chamiofficial
+chamiofficial Update downloader.js
+ 2 contributors
+555 lines (535 sloc)  24.3 KB
 /**
  Copyright (C) 2022.
  Licensed under the  GPL-3.0 License;
@@ -13,9 +32,9 @@ const { tlang, ringtone, cmd,fetchJson, sleep, botpic, getBuffer, pinterest, pre
 const { mediafire } = require("../lib/mediafire.js");
 const googleTTS = require("google-tts-api");
 const ytdl = require('ytdl-secktor')
-const fs = require('fs-extra')
-var videotime = 60000 // 1000 min
-var dlsize = 1000 // 1000mb
+const fs = require('fs')
+var videotime = 6000 // 100 min
+var dlsize = 100 // 100mb
     //---------------------------------------------------------------------------
 cmd({
             pattern: "tgs",
@@ -69,7 +88,7 @@ cmd({
             let yts = require("secktor-pack")
             let search = await yts(text)
             listSerch = []
-            teskd = `\nResult got from ${text}.\n`
+            teskd = `\nඔබ සෙවූ වචනය ${text}. කරුණාකර 100MB ට අඩු වීඩියෝ පමණක් තෝරා එවන්න\n`
             for (let i of search.all) {
                 listSerch.push({
                     title: i.title,
@@ -80,7 +99,7 @@ cmd({
             const sections = [
 
                 {
-                    title: "Total Search🔍" + search.all.length,
+                    title: "සම්පූර්ණ සෙවීම් 🔎 / Total Search 🔎" + search.all.length,
                     rows: listSerch
                 }
 
@@ -89,7 +108,7 @@ cmd({
                 text: teskd,
                 footer: tlang().footer,
                 title: ` *Youtube Search results by  ${tlang().title}.*`,
-                buttonText: "Videos",
+                buttonText: "ඔබට අවශ්‍ය වීඩියෝව තෝරා එවන්න",
                 mentions: await Void.parseMention(teskd),
                 sections
             }
@@ -101,7 +120,7 @@ cmd({
     )
     //---------------------------------------------------------------------------
 cmd({
-            pattern: "play",
+            pattern: "song",
             desc: "Sends info about the query(of youtube video/audio).",
             category: "downloader",
             filename: __filename,
@@ -115,21 +134,21 @@ cmd({
             let buttons = [{
                     buttonId: `${prefix}ytmp4 ${anu.url}`,
                     buttonText: {
-                        displayText: "► Video",
+                        displayText: "🎥 වීඩියෝව / Video 📽️",
                     },
                     type: 1,
                 },
                 {
                     buttonId: `${prefix}ytmp3 ${anu.url}`,
                     buttonText: {
-                        displayText: "♫ Audio",
+                        displayText: "🎶 සිංදුව / Audio 🎵",
                     },
                     type: 1,
                 },
                   {
                     buttonId: `${prefix}ytdoc ${anu.url}`,
                     buttonText: {
-                        displayText: "♫ Document",
+                        displayText: "📁 Document 💾",
                     },
                     type: 1,
                 },
@@ -141,7 +160,7 @@ cmd({
                 caption: `
 ╭───────────────◆
 │⿻ ${tlang().title} 
-│  *Youtube Player* ✨
+│  *Youtube Song & Video Downloader* ✨
 │⿻ *Title:* ${anu.title}
 │⿻ *Duration:* ${anu.timestamp}
 │⿻ *Viewers:* ${anu.views}
@@ -262,7 +281,7 @@ cmd({
     )
     //---------------------------------------------------------------------------
 cmd({
-            pattern: "song",
+            pattern: "audio",
             desc: "Downloads audio from youtube.",
             category: "downloader",
             filename: __filename,
@@ -273,18 +292,18 @@ cmd({
             let yts = require("secktor-pack")
             let search = await yts(text)
             listSerch = []
-            teskd = `Result From ${text}.\n_+ ${search.all.length} more results._`
+            teskd = `ඔබ සෙවූ වචනය ${text}.\n_සම්පූර්ණ සෙවීම් + ${search.all.length}._`
             for (let i of search.all) {
                 listSerch.push({
                     title: i.title,
                     rowId: `${prefix}ytmp3 ${i.url}`,
-                    description: `WA-BOT / ${i.timestamp}`
+                    description: `Secktor / ${i.timestamp}`
                 })
             }
             const sections = [
 
                 {
-                    title: "Total Search🔍" + search.all.length,
+                    title: "සම්පූර්ණ සෙවීම් 🔎 / Total Search 🔎" + search.all.length,
                     rows: listSerch
                 }
 
@@ -312,7 +331,7 @@ cmd({
         },
         async(Void, citel, text) => {
             let yts = require("secktor-pack");
-            if (!text) return citel.reply(`Example : ${prefix}yts ${tlang().title} WhatsApp Bot`);
+            if (!text) return citel.reply(`Example : ${prefix}yts `);
             let search = await yts(text);
             let textt = "*YouTube Search*\n\n Result From " + text + "\n\n───────────────────\n";
             let no = 1;
@@ -393,12 +412,12 @@ cmd({
                             }
                         }
                     }
-                 Void.sendMessage(citel.chat, buttonMessage, { quoted: citel })
-                 return fs.unlinkSync(`./${randomName}`);
+                    return Void.sendMessage(citel.chat, buttonMessage, { quoted: citel })
                 } else {
-                    citel.reply(`❌ File size bigger than 100mb.`);
+                    citel.reply(`❌ File size bigger than 40mb.`);
                 }
-                return fs.unlinkSync(`./${randomName}`);      
+
+                fs.unlinkSync(`./${randomName}`);
             } catch (e) {
                 console.log(e)
             }
@@ -467,10 +486,9 @@ cmd({
                         },
                     },
                 }
-                await Void.sendMessage(citel.chat, buttonMessage, { quoted: citel })
-                return fs.unlinkSync(`./${randomName}`);
+                return Void.sendMessage(citel.chat, buttonMessage, { quoted: citel })
             } else {
-                citel.reply(`❌ File size bigger than 100mb.`);
+                citel.reply(`❌ File size bigger than 40mb.`);
             }
             fs.unlinkSync(`./${randomName}`);
         } catch (e) {
@@ -482,7 +500,7 @@ cmd({
 
   //---------------------------------------------------------------------------
 cmd({
-        pattern: "ytdoc",
+        pattern: "ytd",
         desc: "Downloads audio by yt link as document.",
         category: "downloader",
         use: '<ytdoc video url>',
@@ -543,10 +561,9 @@ cmd({
                         },
                     },
                 }
-                await Void.sendMessage(citel.chat, buttonMessage, { quoted: citel })
-                return fs.unlinkSync(`./${randomName}`);
+                return Void.sendMessage(citel.chat, buttonMessage, { quoted: citel })
             } else {
-                citel.reply(`❌ File size bigger than 100mb.`);
+                citel.reply(`❌ File size bigger than 40mb.`);
             }
             fs.unlinkSync(`./${randomName}`);
         } catch (e) {
@@ -555,3 +572,18 @@ cmd({
 
     }
 )
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+CHAMI-MDv1/downloader.js at main · Prabath872/CHAMI-MDv1
